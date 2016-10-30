@@ -8,6 +8,14 @@
   <name>line-messaging-api-examples Maven Webapp</name>
   <url>http://maven.apache.org</url>
 
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Central</name>
+      <url>http://repo1.maven.org/maven2</url>
+    </repository>
+  </repositories>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -37,6 +45,18 @@
       <groupId>com.linecorp.bot</groupId>
       <artifactId>line-bot-servlet</artifactId>
       <version>1.1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.microsoft.azure</groupId>
+      <artifactId>applicationinsights-web</artifactId>
+      <version>[1.0,)</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.microsoft.azure</groupId>
+      <artifactId>applicationinsights-logging-logback</artifactId>
+      <version>1.0.6</version>
     </dependency>
 
     <dependency>

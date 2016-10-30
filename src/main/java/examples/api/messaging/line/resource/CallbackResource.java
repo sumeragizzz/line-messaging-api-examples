@@ -9,9 +9,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.linecorp.bot.client.LineMessagingServiceBuilder;
 import com.linecorp.bot.client.LineSignatureValidator;
 import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.event.CallbackRequest;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.TextMessage;
@@ -25,6 +29,8 @@ public class CallbackResource {
     private static final String CHANNEL_SECRET = "CHANNEL_SECRET";
     private static final String CHANNEL_ACCESS_TOKEN = "CHANNEL_ACCESS_TOKEN";
 
+    private static final Logger logger = LoggerFactory.getLogger(CallbackResource.class);
+
     @POST
     @Consumes("application/json")
     @SuppressWarnings("unchecked")
@@ -35,7 +41,9 @@ public class CallbackResource {
         LineBotCallbackRequestParser lineBotCallbackRequestParser = new LineBotCallbackRequestParser(
                 new LineSignatureValidator(channelSecret.getBytes()));
         try {
-            lineBotCallbackRequestParser.handle(req)
+            CallbackRequest callbackRequest = lineBotCallbackRequestParser.handle(req);
+            logger.trace(callbackRequest.toString());
+            callbackRequest
                     .getEvents()
                     .stream()
                     .filter(t -> t instanceof MessageEvent && MessageEvent.class.cast(t).getMessage() instanceof TextMessageContent)

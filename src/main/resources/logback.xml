@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE logback>
+<configuration>
+  <appender name="aiAppender"
+    class="com.microsoft.applicationinsights.logback.ApplicationInsightsAppender">
+  </appender>
+  <root level="trace">
+    <appender-ref ref="aiAppender" />
+  </root>
+</configuration>

@@ -33,18 +33,17 @@ public class CallbackResource {
 
     @POST
     @Consumes("application/json")
-    public Response post(@Context HttpServletRequest req) {
+    public Response post(@Context HttpServletRequest request) {
         String channelSecret = System.getenv(CHANNEL_SECRET);
         String channelToken = System.getenv(CHANNEL_ACCESS_TOKEN);
 
         LineBotCallbackRequestParser lineBotCallbackRequestParser = new LineBotCallbackRequestParser(
                 new LineSignatureValidator(channelSecret.getBytes()));
         try {
-            CallbackRequest callbackRequest = lineBotCallbackRequestParser.handle(req);
-            for (MessageEvent<?> messageEvent : filterEvents(callbackRequest.getEvents(), MessageEvent.class)) {
-                filterMessageContent(messageEvent.getMessage(), TextMessageContent.class)
-                        .ifPresent(t -> reply(channelToken, messageEvent.getReplyToken(), t.getText()));
-            }
+            CallbackRequest callbackRequest = lineBotCallbackRequestParser.handle(request);
+            filterEvents(callbackRequest.getEvents(), MessageEvent.class).stream()
+                    .forEach(event -> filterMessageContent(event.getMessage(), TextMessageContent.class)
+                            .ifPresent(messageContent -> reply(channelToken, event.getReplyToken(), messageContent.getText())));
         } catch (LineBotCallbackException | IOException e) {
             e.printStackTrace();
         }
